@@ -1,0 +1,544 @@
+//VARIABLES
+
+$main-font: "Inter";
+$main-color-dark: #262626;
+$main-color-light: #d4d4d8;
+$burnt-orange: #ce7e00;
+$green: #274e13;
+$purple: #ab8dc8;
+$radius: 45px;
+$circumference: 2 * 3.14159 * $radius;
+
+// MIXINS
+@mixin calculateStrokeDashArray($percentage) {
+  $dashLength: $circumference * $percentage;
+  $gapLength: $circumference - $dashLength;
+  stroke-dasharray: $dashLength $gapLength;
+}
+
+@mixin style-main-font-dark() {
+  color: $main-color-dark;
+  font-family: $main-font;
+}
+
+@mixin style-main-font-light() {
+  color: $main-color-light;
+  font-family: $main-font;
+}
+
+@mixin flex-column() {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin align-justify-center() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin border-light() {
+  border: 1px solid $main-color-light;
+  padding: 10px;
+}
+
+@mixin timer-text() {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+}
+
+@mixin timer-stroke() {
+  stroke-width: 7px;
+  stroke-linecap: round;
+}
+
+@mixin timer-base() {
+  fill: none;
+  stroke: none;
+}
+
+@mixin barwidth($height) {
+  height: #{$height}px;
+  width: 10px;
+  background-color: $main-color-dark;
+}
+
+@mixin break-line($width) {
+  margin: auto;
+  background-color: $main-color-dark;
+  height: 2px;
+  width: #{$width}px;
+}
+
+@mixin hover-basic() {
+  cursor: pointer;
+  font-weight: bold;
+  transform: scale(1.05);
+}
+
+// ELEMENTS
+* {
+  margin: 0;
+  padding: 0;
+  font-family: $main-font;
+}
+
+body {
+  display: grid;
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+  grid-template-columns: 1fr 6fr;
+}
+.profile-img {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  padding-top: 20px;
+}
+
+.aside-main-text {
+  @include style-main-font-light();
+  padding-left: 20px;
+
+  &:hover {
+    @include hover-basic();
+  }
+}
+
+.aside {
+  background-color: $main-color-dark;
+  @include flex-column;
+  gap: 40px;
+
+  height: 100%;
+}
+
+.aside-main,
+.aside-lists,
+.aside-climbs {
+  @include flex-column;
+  gap: 5px;
+}
+
+.name {
+  color: $main-color-light;
+}
+
+.chalk-line {
+  margin-left: 20px;
+  width: 100px;
+  height: 2px;
+  background-color: white;
+  border-radius: 1px;
+}
+.profile-pic-name {
+  @include flex-column;
+  @include align-justify-center;
+  gap: 20px;
+}
+
+.upper-nav {
+  display: flex;
+}
+
+.upper-nav-icons {
+  stroke: rgb(38, 38, 38, 90%);
+  height: 30px;
+  width: 30px;
+  @include border-light();
+  &:hover {
+    @include hover-basic();
+  }
+}
+
+.search-bar {
+  padding-left: 20px;
+  width: 62vw;
+  height: 30px;
+  border: none;
+}
+
+.magnifying-glass {
+  margin-right: 10px;
+  height: 30px;
+  width: 30px;
+  stroke: rgb(38, 38, 38, 90%);
+}
+
+.icon-search-container {
+  @include align-justify-center();
+  @include border-light();
+}
+
+.headline {
+  @include style-main-font-dark();
+  font-size: 24px;
+  padding: 50px;
+}
+
+.headline-location {
+  font-size: 14px;
+}
+
+.stats-bar {
+  display: flex;
+  padding-left: 50px;
+  gap: 24px;
+}
+
+.stats-bar-text {
+  &:hover {
+    @include hover-basic();
+  }
+}
+.timer-container {
+  @include align-justify-center();
+  gap: 24px;
+}
+
+/* Sets the containers height and width */
+.base-timer {
+  position: relative;
+  height: 150px;
+  width: 150px;
+}
+
+.timer-label-container {
+  @include flex-column();
+  @include align-justify-center();
+  gap: 25px;
+}
+
+/* Removes SVG styling that would hide the time label */
+.base-timer__circle {
+  @include timer-base();
+  fill: rgb(245, 245, 245, 50%);
+}
+
+/* The SVG path that displays the timer's progress */
+.base-timer__path-elapsed1 {
+  stroke: $burnt-orange;
+  @include calculateStrokeDashArray(0.33);
+  @include timer-stroke();
+}
+
+.base-timer__path-elapsed2 {
+  stroke: $green;
+  @include calculateStrokeDashArray(0.12);
+
+  @include timer-stroke();
+}
+
+.base-timer__path-elapsed3 {
+  stroke: $purple;
+
+  @include calculateStrokeDashArray(0.55);
+  @include timer-stroke();
+}
+.base-timer__label {
+  @include timer-text();
+  @include align-justify-center();
+  @include flex-column();
+}
+
+.stats {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 50px;
+  padding: 30px;
+}
+
+.top-categories-label {
+  background-color: $main-color-light;
+  color: $main-color-dark;
+  padding: 10px 20px;
+  border-radius: 15px;
+  &:hover {
+    @include hover-basic();
+  }
+}
+.bar-graph-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 15px;
+}
+
+.graph-label-container {
+  @include flex-column();
+  @include align-justify-center();
+  gap: 25px;
+}
+.bar1 {
+  @include barwidth(10);
+  &:hover {
+    @include hover-basic();
+  }
+}
+.bar2 {
+  @include barwidth(20);
+  &:hover {
+    @include hover-basic();
+  }
+}
+.bar3 {
+  @include barwidth(50);
+  &:hover {
+    @include hover-basic();
+  }
+}
+.bar4 {
+  @include barwidth(25);
+  &:hover {
+    @include hover-basic();
+  }
+}
+.bar5 {
+  @include barwidth(50);
+  &:hover {
+    @include hover-basic();
+  }
+}
+.bar6 {
+  @include barwidth(70);
+  &:hover {
+    @include hover-basic();
+  }
+}
+.bar7 {
+  @include barwidth(65);
+  &:hover {
+    @include hover-basic();
+  }
+}
+.bar8 {
+  @include barwidth(30);
+  &:hover {
+    @include hover-basic();
+  }
+}
+.bar9 {
+  @include barwidth(33);
+  &:hover {
+    @include hover-basic();
+  }
+}
+.bar10 {
+  @include barwidth(38);
+  &:hover {
+    @include hover-basic();
+  }
+}
+.bar11 {
+  @include barwidth(10);
+  &:hover {
+    @include hover-basic();
+  }
+}
+.bar12 {
+  @include barwidth(12);
+  &:hover {
+    @include hover-basic();
+  }
+}
+
+.bar-text {
+  font-size: 12px;
+}
+
+.bar-container {
+  @include flex-column();
+  gap: 10px;
+  @include align-justify-center();
+}
+
+.seperation-line {
+  @include break-line(1000);
+}
+
+.icon {
+  height: 20px;
+  width: 20px;
+  &:hover {
+    @include hover-basic();
+  }
+}
+
+.description-box {
+  margin: 30px;
+  box-shadow: 5px 5px 10px $main-color-dark;
+  width: 60%;
+}
+.log-route {
+  display: flex;
+  align-items: center;
+  background-color: $main-color-light;
+  padding: 20px 25px;
+  gap: 20px;
+}
+
+.table {
+  border-spacing: 30px;
+  color: $main-color-dark;
+}
+.table tr td:first-child {
+  color: $main-color-dark;
+  font-weight: bold;
+}
+
+.scroll {
+  height: 100%;
+  overflow: scroll;
+  background-image: linear-gradient(
+      rgba(239, 235, 235, 0.95),
+      rgba(232, 229, 229, 0.85)
+    ),
+    url(/assets/background-img.jpg);
+  background-size: cover;
+}
+
+.lower-section {
+  display: flex;
+  justify-content: center;
+}
+
+.buttons-links {
+  @include flex-column();
+  width: 40%;
+  gap: 40px;
+  margin-top: 30px;
+  align-items: center;
+}
+
+.btn-contribute {
+  color: white;
+  background-color: $burnt-orange;
+  border: none;
+  height: 50px;
+  width: 300px;
+  border-radius: 15px;
+  &:hover {
+    @include hover-basic();
+  }
+}
+
+.btn-remove {
+  color: white;
+  background-color: $green;
+  border: none;
+  height: 50px;
+  width: 300px;
+  border-radius: 15px;
+  &:hover {
+    @include hover-basic();
+  }
+}
+
+.headline-location {
+  display: flex;
+  align-items: center;
+}
+
+.label-select {
+  text-decoration: underline wavy 2px $green;
+  text-underline-offset: 5px;
+}
+
+.copy-link {
+  display: flex;
+  align-items: center;
+}
+
+.link {
+  width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: rgb(245, 245, 245, 50%);
+  color: $main-color-dark;
+  padding: 10px 20px;
+  white-space: nowrap;
+  color: $main-color-dark;
+  font-size: 14px;
+}
+
+.copy-button {
+  background-color: $purple;
+  border: none;
+  color: $main-color-dark;
+  padding: 10px 20px;
+  &:hover {
+    @include hover-basic();
+  }
+}
+
+.description-link-container {
+  @include flex-column();
+  gap: 20px;
+}
+
+.link-text {
+  width: 300px;
+}
+
+.link-headline {
+  color: $main-color-dark;
+  font-size: 14px;
+}
+
+.link-desc {
+  color: $main-color-dark;
+  font-size: 12px;
+}
+
+.break-line-short {
+  @include break-line(300);
+}
+
+.profile-img-small {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  &:hover {
+    @include hover-basic();
+  }
+}
+
+.link-last {
+  width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: rgb(245, 245, 245, 50%);
+  color: $main-color-dark;
+  padding: 10px 20px;
+  white-space: nowrap;
+  color: $main-color-dark;
+  font-size: 14px;
+  margin-bottom: 50px;
+}
+
+.aside-select {
+  font-weight: bold;
+  text-decoration: underline wavy 2px white;
+}
+
+.lower-section {
+  overflow: scroll;
+}
+
+.edit-route-icon-container {
+  font-size: 12px;
+  color: white;
+  @include align-justify-center();
+  background-color: $main-color-dark;
+  padding: 5px 10px;
+  &:hover {
+    @include hover-basic();
+  }
+}
